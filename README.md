@@ -36,6 +36,9 @@ DB_NAME=dbclassicmodels
 JWT_SECRET=change-me
 ```
 
+## CORS (frontend localhost)
+Se il frontend gira su `http://localhost:3000`, il backend abilita CORS per quella origin.
+
 ## Endpoints principali
 - `GET /api`
 - `GET /api/health`
