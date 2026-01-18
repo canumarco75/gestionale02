@@ -29,8 +29,9 @@ export default function App() {
             <h2>Funzionalità</h2>
             <button
               type="button"
-              className="ghost-button"
+              className="ghost-button collapse-button"
               onClick={() => setSidebarCollapsed((prev) => !prev)}
+              aria-label={sidebarCollapsed ? 'Espandi sidebar' : 'Comprimi sidebar'}
             >
               {sidebarCollapsed ? '›' : '‹'}
             </button>
