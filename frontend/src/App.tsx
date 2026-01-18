@@ -19,87 +19,59 @@ const navItems = [
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   return (
     <div data-theme={theme}>
-      <div style={{ display: 'flex', minHeight: '100vh' }}>
-        <aside
-          style={{
-            width: '240px',
-            background: 'var(--surface)',
-            borderRight: '1px solid var(--border)',
-            padding: '1.5rem'
-          }}
-        >
-          <h2 style={{ marginTop: 0 }}>Funzionalità</h2>
-          <nav style={{ display: 'grid', gap: '0.75rem' }}>
+      <div className="app-shell">
+        <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+          <div className="sidebar-header">
+            <h2>Funzionalità</h2>
+            <button
+              type="button"
+              className="ghost-button"
+              onClick={() => setSidebarCollapsed((prev) => !prev)}
+            >
+              {sidebarCollapsed ? '›' : '‹'}
+            </button>
+          </div>
+          <nav className="sidebar-nav">
             {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
-                style={({ isActive }) => ({
-                  textDecoration: 'none',
-                  fontWeight: isActive ? 700 : 500,
-                  color: isActive ? 'var(--primary)' : 'var(--text)'
-                })}
+                className={({ isActive }) =>
+                  `nav-link ${isActive ? 'active' : ''}`.trim()
+                }
               >
-                {item.label}
+                <span className="nav-label">{item.label}</span>
               </NavLink>
             ))}
           </nav>
         </aside>
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <header
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '1rem 2rem',
-              borderBottom: '1px solid var(--border)',
-              background: 'var(--surface)'
-            }}
-          >
+        <div className="main-column">
+          <header className="topbar">
             <div>
-              <h1 style={{ margin: 0 }}>Gestionale Classic Models</h1>
-              <p style={{ margin: '0.25rem 0', color: 'var(--muted)' }}>
-                Frontend React collegato alle API NestJS
-              </p>
+              <h1>Gestionale Classic Models</h1>
+              <p className="subtitle">Frontend React collegato alle API NestJS</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <div className="topbar-actions">
               <button
                 type="button"
+                className="ghost-button"
                 onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                style={{
-                  padding: '0.4rem 0.75rem',
-                  borderRadius: '999px',
-                  border: '1px solid var(--border)',
-                  background: 'transparent',
-                  cursor: 'pointer'
-                }}
               >
                 {theme === 'light' ? 'Dark mode' : 'Light mode'}
               </button>
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: 'var(--primary)',
-                  color: '#fff',
-                  display: 'grid',
-                  placeItems: 'center',
-                  fontWeight: 600
-                }}
-                title="Profilo utente"
-              >
+              <div className="avatar" title="Profilo utente">
                 U
               </div>
-              <NavLink to="/login" style={{ textDecoration: 'none', color: 'var(--text)' }}>
+              <NavLink to="/login" className="nav-link">
                 Login
               </NavLink>
             </div>
           </header>
-          <main style={{ padding: '2rem' }}>
+          <main className="main-content">
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/customers" element={<CustomersPage />} />
