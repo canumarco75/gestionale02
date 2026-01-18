@@ -10,12 +10,12 @@ import ImportExportPage from './pages/ImportExportPage';
 import LoginPage from './pages/LoginPage';
 
 const navItems = [
-  { label: 'Dashboard', to: '/' },
-  { label: 'Clienti', to: '/customers' },
-  { label: 'Ordini', to: '/orders' },
-  { label: 'Prodotti', to: '/products' },
-  { label: 'Report', to: '/reports' },
-  { label: 'Import/Export', to: '/import-export' }
+  { label: 'Dashboard', to: '/', icon: 'dashboard' },
+  { label: 'Clienti', to: '/customers', icon: 'group' },
+  { label: 'Ordini', to: '/orders', icon: 'receipt_long' },
+  { label: 'Prodotti', to: '/products', icon: 'inventory_2' },
+  { label: 'Report', to: '/reports', icon: 'bar_chart' },
+  { label: 'Import/Export', to: '/import-export', icon: 'swap_horiz' }
 ];
 
 export default function App() {
@@ -45,7 +45,11 @@ export default function App() {
                 className={({ isActive }) =>
                   `nav-link ${isActive ? 'active' : ''}`.trim()
                 }
+                title={item.label}
               >
+                <span className="nav-icon material-symbols-outlined" aria-hidden="true">
+                  {item.icon}
+                </span>
                 <span className="nav-label">{item.label}</span>
               </NavLink>
             ))}

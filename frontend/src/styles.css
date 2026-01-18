@@ -103,6 +103,9 @@ td {
   text-decoration: none;
   font-weight: 500;
   color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
 .nav-link.active {
@@ -112,6 +115,14 @@ td {
 
 .sidebar.collapsed .nav-label {
   display: none;
+}
+
+.nav-icon {
+  font-size: 1.25rem;
+}
+
+.sidebar.collapsed .nav-link {
+  justify-content: center;
 }
 
 .sidebar.collapsed .sidebar-header h2 {
@@ -177,8 +188,16 @@ td {
   background: var(--surface);
 }
 
+.card strong {
+  color: var(--text);
+}
+
 .error-text {
   color: #ef4444;
+}
+
+.total-count {
+  color: var(--text);
 }
 
 .data-table {
@@ -201,6 +220,10 @@ td {
 .table-actions {
   display: flex;
   gap: 0.5rem;
+}
+
+.pagination-info {
+  color: var(--text);
 }
 
 .form-grid {
@@ -238,3 +261,4 @@ td {
     padding: 1.5rem;
   }
 }
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@400&display=swap');

@@ -178,7 +178,7 @@ export default function OrdersPage() {
         {error && <p className="error-text">{error}</p>}
         {!loading && !error && (
           <>
-            <p>
+            <p className="total-count">
               Totale ordini: <strong>{total}</strong>
             </p>
             <table className="data-table">
@@ -222,7 +222,7 @@ export default function OrdersPage() {
               <button type="button" onClick={() => setPage((prev) => Math.max(1, prev - 1))}>
                 Prev
               </button>
-              <span>
+              <span className="pagination-info">
                 Pagina {page} di {totalPages}
               </span>
               <button
