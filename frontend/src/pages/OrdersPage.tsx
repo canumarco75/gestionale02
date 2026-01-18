@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/client';
 
 type Order = {
@@ -29,6 +30,7 @@ const columns = [
 type ColumnKey = (typeof columns)[number]['key'];
 
 export default function OrdersPage() {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -46,8 +48,6 @@ export default function OrdersPage() {
     status: true,
     shippedDate: true
   });
-  const [formState, setFormState] = useState<Partial<Order>>({});
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
@@ -91,35 +91,8 @@ export default function OrdersPage() {
     setSortDir('ASC');
   };
 
-  const handleCreate = async () => {
-    setError(null);
-    try {
-      await apiClient.post('/orders', formState);
-      setFormState({});
-      await fetchOrders();
-    } catch (err) {
-      setError('Errore durante la creazione ordine.');
-    }
-  };
-
-  const handleUpdate = async () => {
-    if (!selectedOrder?.orderNumber) {
-      setError('Seleziona un ordine da modificare.');
-      return;
-    }
-    setError(null);
-    try {
-      await apiClient.patch(`/orders/${selectedOrder.orderNumber}`, formState);
-      setSelectedOrder(null);
-      setFormState({});
-      await fetchOrders();
-    } catch (err) {
-      setError('Errore durante l’aggiornamento ordine.');
-    }
-  };
-
   const handleDelete = async (orderNumber: number) => {
-    if (!window.confirm(`Eliminare l'ordine ${orderNumber}?`)) {
+    if (!window.confirm(`Confermi l'eliminazione dell'ordine ${orderNumber}?`)) {
       return;
     }
     setError(null);
@@ -133,17 +106,6 @@ export default function OrdersPage() {
 
   const handleExport = (format: 'csv' | 'excel' | 'pdf') => {
     window.open(`http://localhost:3001/api/export/${format}/orders`, '_blank');
-  };
-
-  const handleSelectOrder = (order: Order) => {
-    setSelectedOrder(order);
-    setFormState({
-      orderDate: order.orderDate,
-      requiredDate: order.requiredDate,
-      shippedDate: order.shippedDate,
-      status: order.status,
-      customerNumber: order.customerNumber
-    });
   };
 
   return (
@@ -177,6 +139,9 @@ export default function OrdersPage() {
           </select>
         </label>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <button type="button" onClick={() => navigate('/orders/new')}>
+            Aggiungi
+          </button>
           <button type="button" onClick={() => handleExport('csv')}>
             Esporta CSV
           </button>
@@ -208,40 +173,40 @@ export default function OrdersPage() {
           ))}
         </div>
       </details>
-      <div style={{ border: '1px solid #e5e7eb', padding: '1rem', borderRadius: '0.5rem' }}>
+      <div className="card">
         {loading && <p>Caricamento ordini...</p>}
-        {error && <p style={{ color: '#b91c1c' }}>{error}</p>}
+        {error && <p className="error-text">{error}</p>}
         {!loading && !error && (
           <>
             <p>
               Totale ordini: <strong>{total}</strong>
             </p>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <table className="data-table">
               <thead>
-                <tr style={{ textAlign: 'left', borderBottom: '1px solid #e5e7eb' }}>
+                <tr>
                   {columnList.map((column) => (
                     <th
                       key={column.key}
-                      style={{ padding: '0.5rem', cursor: 'pointer' }}
+                      className="sortable"
                       onClick={() => handleSort(column.key)}
                     >
                       {column.label}
                       {sortBy === column.key ? (sortDir === 'ASC' ? ' ▲' : ' ▼') : ''}
                     </th>
                   ))}
-                  <th style={{ padding: '0.5rem' }}>Azioni</th>
+                  <th>Azioni</th>
                 </tr>
               </thead>
               <tbody>
                 {orders.map((order) => (
-                  <tr key={order.orderNumber} style={{ borderBottom: '1px solid #f3f4f6' }}>
+                  <tr key={order.orderNumber}>
                     {columnList.map((column) => (
-                      <td key={column.key} style={{ padding: '0.5rem' }}>
+                      <td key={column.key}>
                         {order[column.key] ?? '—'}
                       </td>
                     ))}
-                    <td style={{ padding: '0.5rem', display: 'flex', gap: '0.5rem' }}>
-                      <button type="button" onClick={() => handleSelectOrder(order)}>
+                    <td className="table-actions">
+                      <button type="button" onClick={() => navigate(`/orders/${order.orderNumber}`)}>
                         Modifica
                       </button>
                       <button type="button" onClick={() => handleDelete(order.orderNumber)}>
@@ -270,107 +235,6 @@ export default function OrdersPage() {
           </>
         )}
       </div>
-      <section style={{ marginTop: '1.5rem' }}>
-        <h3>{selectedOrder ? `Modifica ordine ${selectedOrder.orderNumber}` : 'Nuovo ordine'}</h3>
-        <div style={{ display: 'grid', gap: '0.75rem', maxWidth: '420px' }}>
-          {!selectedOrder && (
-            <label>
-              Numero ordine
-              <input
-                type="number"
-                value={formState.orderNumber ?? ''}
-                onChange={(event) =>
-                  setFormState((prev) => ({
-                    ...prev,
-                    orderNumber: Number(event.target.value)
-                  }))
-                }
-              />
-            </label>
-          )}
-          <label>
-            Data ordine
-            <input
-              type="date"
-              value={formState.orderDate ?? ''}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  orderDate: event.target.value
-                }))
-              }
-            />
-          </label>
-          <label>
-            Data richiesta
-            <input
-              type="date"
-              value={formState.requiredDate ?? ''}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  requiredDate: event.target.value
-                }))
-              }
-            />
-          </label>
-          <label>
-            Data spedizione
-            <input
-              type="date"
-              value={formState.shippedDate ?? ''}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  shippedDate: event.target.value || null
-                }))
-              }
-            />
-          </label>
-          <label>
-            Stato
-            <input
-              type="text"
-              value={formState.status ?? ''}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  status: event.target.value
-                }))
-              }
-            />
-          </label>
-          <label>
-            Cliente
-            <input
-              type="number"
-              value={formState.customerNumber ?? ''}
-              onChange={(event) =>
-                setFormState((prev) => ({
-                  ...prev,
-                  customerNumber: Number(event.target.value)
-                }))
-              }
-            />
-          </label>
-          <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button type="button" onClick={selectedOrder ? handleUpdate : handleCreate}>
-              {selectedOrder ? 'Aggiorna' : 'Crea'}
-            </button>
-            {selectedOrder && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedOrder(null);
-                  setFormState({});
-                }}
-              >
-                Annulla
-              </button>
-            )}
-          </div>
-        </div>
-      </section>
     </section>
   );
 }

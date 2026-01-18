@@ -3,6 +3,7 @@ import { useState } from 'react';
 import DashboardPage from './pages/DashboardPage';
 import CustomersPage from './pages/CustomersPage';
 import OrdersPage from './pages/OrdersPage';
+import OrdersFormPage from './pages/OrdersFormPage';
 import ProductsPage from './pages/ProductsPage';
 import ReportsPage from './pages/ReportsPage';
 import ImportExportPage from './pages/ImportExportPage';
@@ -77,6 +78,8 @@ export default function App() {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/customers" element={<CustomersPage />} />
               <Route path="/orders" element={<OrdersPage />} />
+              <Route path="/orders/new" element={<OrdersFormPage mode="create" />} />
+              <Route path="/orders/:orderNumber" element={<OrdersFormPage mode="edit" />} />
               <Route path="/products" element={<ProductsPage />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/import-export" element={<ImportExportPage />} />
