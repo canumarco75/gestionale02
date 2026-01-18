@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AppController } from './app.controller';
 import { AuthModule } from '../auth/auth.module';
 import { CustomersModule } from '../customers/customers.module';
 import { OrdersModule } from '../orders/orders.module';
@@ -34,6 +35,7 @@ import { DbModule } from '../db/db.module';
     ReportsModule,
     DashboardModule,
     ImportExportModule
-  ]
+  ],
+  controllers: [AppController]
 })
 export class AppModule {}

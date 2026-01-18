@@ -37,6 +37,8 @@ JWT_SECRET=change-me
 ```
 
 ## Endpoints principali
+- `GET /api`
+- `GET /api/health`
 - `GET /api/customers`
 - `GET /api/orders`
 - `GET /api/products`
