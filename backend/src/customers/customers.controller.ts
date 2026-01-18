@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { Customer } from '../db/entities/customer.entity';
 
@@ -7,8 +7,20 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @Get()
-  findAll() {
-    return this.customersService.findAll();
+  findAll(
+    @Query('page') page = '1',
+    @Query('pageSize') pageSize = '10',
+    @Query('sortBy') sortBy = 'customerName',
+    @Query('sortDir') sortDir = 'ASC',
+    @Query('search') search?: string
+  ) {
+    return this.customersService.findAllPaged({
+      page: Number(page) || 1,
+      pageSize: Number(pageSize) || 10,
+      sortBy,
+      sortDir: sortDir === 'DESC' ? 'DESC' : 'ASC',
+      search
+    });
   }
 
   @Get(':customerNumber')

@@ -2,6 +2,7 @@ import { NavLink, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import DashboardPage from './pages/DashboardPage';
 import CustomersPage from './pages/CustomersPage';
+import CustomersFormPage from './pages/CustomersFormPage';
 import OrdersPage from './pages/OrdersPage';
 import OrdersFormPage from './pages/OrdersFormPage';
 import ProductsPage from './pages/ProductsPage';
@@ -81,6 +82,8 @@ export default function App() {
             <Routes>
               <Route path="/" element={<DashboardPage />} />
               <Route path="/customers" element={<CustomersPage />} />
+              <Route path="/customers/new" element={<CustomersFormPage mode="create" />} />
+              <Route path="/customers/:customerNumber" element={<CustomersFormPage mode="edit" />} />
               <Route path="/orders" element={<OrdersPage />} />
               <Route path="/orders/new" element={<OrdersFormPage mode="create" />} />
               <Route path="/orders/:orderNumber" element={<OrdersFormPage mode="edit" />} />
