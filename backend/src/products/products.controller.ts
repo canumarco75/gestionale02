@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { Product } from '../db/entities/product.entity';
 
@@ -7,8 +7,20 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(
+    @Query('page') page = '1',
+    @Query('pageSize') pageSize = '10',
+    @Query('sortBy') sortBy = 'productName',
+    @Query('sortDir') sortDir = 'ASC',
+    @Query('search') search?: string
+  ) {
+    return this.productsService.findAllPaged({
+      page: Number(page) || 1,
+      pageSize: Number(pageSize) || 10,
+      sortBy,
+      sortDir: sortDir === 'DESC' ? 'DESC' : 'ASC',
+      search
+    });
   }
 
   @Get(':productCode')

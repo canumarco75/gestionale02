@@ -6,6 +6,7 @@ import CustomersFormPage from './pages/CustomersFormPage';
 import OrdersPage from './pages/OrdersPage';
 import OrdersFormPage from './pages/OrdersFormPage';
 import ProductsPage from './pages/ProductsPage';
+import ProductsFormPage from './pages/ProductsFormPage';
 import ReportsPage from './pages/ReportsPage';
 import ImportExportPage from './pages/ImportExportPage';
 import LoginPage from './pages/LoginPage';
@@ -88,6 +89,8 @@ export default function App() {
               <Route path="/orders/new" element={<OrdersFormPage mode="create" />} />
               <Route path="/orders/:orderNumber" element={<OrdersFormPage mode="edit" />} />
               <Route path="/products" element={<ProductsPage />} />
+              <Route path="/products/new" element={<ProductsFormPage mode="create" />} />
+              <Route path="/products/:productCode" element={<ProductsFormPage mode="edit" />} />
               <Route path="/reports" element={<ReportsPage />} />
               <Route path="/import-export" element={<ImportExportPage />} />
               <Route path="/login" element={<LoginPage />} />
